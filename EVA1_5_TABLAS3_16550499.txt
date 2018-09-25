@@ -1,0 +1,189 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \c
+\connect [-mx|--mysqlx|-mc|--mysql|-ma] <URI>
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 13
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_1
+Default schema set to `eva_1`.
+Fetching table and column names from `eva_1` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > show tables;
++-----------------+
+| Tables_in_eva_1 |
++-----------------+
+| carrera         |
+| estudiantes     |
+| horario         |
+| materias        |
+| pais            |
+| personal        |
+| personal2       |
++-----------------+
+7 rows in set (0.0035 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc pais;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| nombre     | varchar(50)                                        | NO   |     | NULL    |                |
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('Europa','Asia','Africa','America','Oceania') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.0028 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table pais change nombre nombre varchar(50) not null unique;
+Query OK, 0 rows affected (0.6318 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc pais;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| nombre     | varchar(50)                                        | NO   | UNI | NULL    |                |
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('Europa','Asia','Africa','America','Oceania') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.0038 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into pais(nombre, poblacion, continente)
+                                     ... values('Mexico', 1500000000, 'America');
+Query OK, 1 row affected (0.1901 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into pais(nombre, poblacion, continente) values('Mexico', 1500000000, 'America');
+ERROR: 1062 (23000): Duplicate entry 'Mexico' for key 'nombre'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from pais;
++--------+-------+------------+------------+
+| nombre | clave | poblacion  | continente |
++--------+-------+------------+------------+
+| Mexico |     1 | 1500000000 | America    |
++--------+-------+------------+------------+
+1 row in set (0.0013 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > show tables;
++-----------------+
+| Tables_in_eva_1 |
++-----------------+
+| carrera         |
+| estudiantes     |
+| horario         |
+| materias        |
+| pais            |
+| personal        |
+| personal2       |
++-----------------+
+7 rows in set (0.0028 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc personal;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| clave    | int(11)     | YES  |     | NULL    |       |
+| nombre   | varchar(50) | YES  |     | NULL    |       |
+| apellido | varchar(50) | YES  |     | NULL    |       |
+| depa     | varchar(50) | YES  |     | NULL    |       |
+| salario  | float       | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.0030 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc personal2;
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| Field        | Type                                                     | Null | Key | Default | Extra          |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| calve        | int(11)                                                  | NO   | PRI | NULL    | auto_increment |
+| nombre       | varchar(50)                                              | NO   |     | NULL    |                |
+| apellido     | varchar(50)                                              | NO   |     | NULL    |                |
+| departamento | enum('Sistemas','Contabilidad','Inhumanos','Produccion') | YES  |     | NULL    |                |
+| salario      | float                                                    | YES  |     | 15000   |                |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+5 rows in set (0.0027 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 add column RFC varchar(12) unique;
+Query OK, 0 rows affected (1.2070 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc personal2;
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| Field        | Type                                                     | Null | Key | Default | Extra          |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| calve        | int(11)                                                  | NO   | PRI | NULL    | auto_increment |
+| nombre       | varchar(50)                                              | NO   |     | NULL    |                |
+| apellido     | varchar(50)                                              | NO   |     | NULL    |                |
+| departamento | enum('Sistemas','Contabilidad','Inhumanos','Produccion') | YES  |     | NULL    |                |
+| salario      | float                                                    | YES  |     | 15000   |                |
+| RFC          | varchar(12)                                              | YES  | UNI | NULL    |                |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+6 rows in set (0.0034 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > delete from personal2;
+Query OK, 4 rows affected (0.1828 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 change RFC RFC varchar(50) not null unique;
+Query OK, 0 rows affected, 1 warning (1.2965 sec)
+
+Records: 0  Duplicates: 0  Warnings: 1
+Warning (code 1831): Duplicate index 'RFC_2' defined on the table 'eva_1.personal2'. This is deprecated and will be disallowed in a future release.
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from personal2;
+Empty set (0.0011 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into personal2(nombre, apellido, departamento, RFC)
+                                     ... values('David', 'Reyes', 'Sistemas', 'ALGO18875T81');
+Query OK, 1 row affected (0.1612 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into personal2(nombre, apellido, departamento, RFC) values('David', 'Reyes', 'Sistemas', 'ALGO18875T81');
+ERROR: 1062 (23000): Duplicate entry 'ALGO18875T81' for key 'RFC'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from personal2;
++-------+--------+----------+--------------+---------+--------------+
+| calve | nombre | apellido | departamento | salario | RFC          |
++-------+--------+----------+--------------+---------+--------------+
+|     5 | David  | Reyes    | Sistemas     |   15000 | ALGO18875T81 |
++-------+--------+----------+--------------+---------+--------------+
+1 row in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table trabajo(
+                                     ... job_ind int primary key not null AUTO_INCREMENT,
+                                     ... job_title varchar(50) default '',
+                                     ... min_sal int default 8000,
+                                     ... max_sal int);
+Query OK, 0 rows affected (0.6691 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc trabajo;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| job_ind   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| job_title | varchar(50) | YES  |     |         |                |
+| min_sal   | int(11)     | YES  |     | 8000    |                |
+| max_sal   | int(11)     | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.1203 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL >

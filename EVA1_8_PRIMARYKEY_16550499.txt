@@ -1,0 +1,278 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 14
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| eva_1              |
+| evaluacion_1       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.0018 sec)
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_1
+Default schema set to `eva_1`.
+Fetching table and column names from `eva_1` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc carrera;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| nombre   | varchar(50) | YES  |     | NULL    |       |
+| creditos | int(11)     | YES  |     | NULL    |       |
+| semestre | int(11)     | YES  |     | NULL    |       |
+| area     | varchar(50) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.0031 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc estudiantes;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| nombre     | varchar(100) | YES  |     | NULL    |       |
+| a_pat      | varchar(50)  | YES  |     | NULL    |       |
+| a_mat      | varchar(50)  | YES  |     | NULL    |       |
+| no_control | varchar(10)  | YES  |     | NULL    |       |
+| fecha_naci | date         | YES  |     | NULL    |       |
+| lug_naci   | varchar(100) | YES  |     | NULL    |       |
+| pais_naci  | varchar(100) | YES  |     | NULL    |       |
+| direcc     | varchar(100) | YES  |     | NULL    |       |
+| genero     | varchar(50)  | YES  |     | NULL    |       |
+| correo     | varchar(50)  | YES  |     | NULL    |       |
+| no_tel     | varchar(50)  | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+11 rows in set (0.0057 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table estudiantes add constraint primary key (no_ctrl);
+ERROR: 1072 (42000): Key column 'no_ctrl' doesn't exist in table
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table estudiantes add constraint primary key (no_control);
+Query OK, 0 rows affected (1.4149 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into estudiantes (no_control, nombre)
+                                     ... values ('123456','Erick');
+Query OK, 1 row affected (0.1136 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > show tables;
++-----------------+
+| Tables_in_eva_1 |
++-----------------+
+| carrera         |
+| estudiantes     |
+| horario         |
+| materias        |
+| pais            |
+| personal        |
+| personal2       |
+| trabajo         |
++-----------------+
+8 rows in set (0.0025 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc materias
+                                     ... ;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| nombre      | varchar(50) | YES  |     | NULL    |       |
+| creditos    | int(11)     | YES  |     | NULL    |       |
+| hr_teoricas | int(11)     | YES  |     | NULL    |       |
+| hr_pract    | int(11)     | YES  |     | NULL    |       |
+| carrera     | varchar(3)  | YES  |     | NULL    |       |
+| semestre    | int(11)     | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.0031 sec)
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into meteria (no_control, nombre) values ('123456','Erick');
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into estudia (no_control, nombre) values ('123456','Erick');
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table materia add constraint primary key
+                                     ... (no_control,nombre);
+ERROR: 1146 (42S02): Table 'eva_1.materia' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table materias add constraint primary key  (no_control,nombre);
+ERROR: 1072 (42000): Key column 'no_control' doesn't exist in table
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table materias add constraint primary key
+                                     ... (semestre, nombre);
+Query OK, 0 rows affected (0.9746 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc materias ;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| nombre      | varchar(50) | NO   | PRI | NULL    |       |
+| creditos    | int(11)     | YES  |     | NULL    |       |
+| hr_teoricas | int(11)     | YES  |     | NULL    |       |
+| hr_pract    | int(11)     | YES  |     | NULL    |       |
+| carrera     | varchar(3)  | YES  |     | NULL    |       |
+| semestre    | int(11)     | NO   | PRI | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.0030 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into materias (nombre, semestre)
+                                     ... values ('Taller de Bases de Datos',5);
+Query OK, 1 row affected (0.1264 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into materias (nombre, semestre)  values ('Taller de Bases de Datos',5);
+ERROR: 1062 (23000): Duplicate entry '5-Taller de Bases de Datos' for key 'PRIMARY'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create tables compras(
+                                     ... nombre_cliente varchar(100)
+                                     ... ,
+                                     ... fecha datetime,
+                                     ... cant float,
+                                     ... primary key (nombre_cliente, fecha));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tables compras(
+nombre_cliente varchar(100)
+,
+fecha datetime,
+cant float,
+primar' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create tables compras( nombre_cliente varchar(100), fecha datetime, cant float, primary key (nombre_cliente, fecha));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tables compras( nombre_cliente varchar(100), fecha datetime, cant float, primary' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table compras( nombre_cliente varchar(100), fecha datetime, cant float, primary key (nombre_cliente, fecha));
+Query OK, 0 rows affected (0.4813 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc compras;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| nombre_cliente | varchar(100) | NO   | PRI | NULL    |       |
+| fecha          | datetime     | NO   | PRI | NULL    |       |
+| cant           | float        | YES  |     | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+3 rows in set (0.0036 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into compras (nombre_cliente,fecha)
+                                     ... values ('David','2018-09-11');
+Query OK, 1 row affected (0.0848 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into compras (nombre_cliente,fecha) values ('David','2018-09-11');
+ERROR: 1062 (23000): Duplicate entry 'David-2018-09-11 00:00:00' for key 'PRIMARY'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table compras drop primary key;
+Query OK, 1 row affected (1.3428 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc carrera;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| nombre   | varchar(50) | YES  |     | NULL    |       |
+| creditos | int(11)     | YES  |     | NULL    |       |
+| semestre | int(11)     | YES  |     | NULL    |       |
+| area     | varchar(50) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.0029 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table carrera add primary key (nombre, area);
+ERROR: 1062 (23000): Duplicate entry 'Sistemas-Sistemas y Computacion' for key 'PRIMARY'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > delete * from carrera;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* from carrera' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from carrera;
++----------+----------+----------+------------------------+
+| nombre   | creditos | semestre | area                   |
++----------+----------+----------+------------------------+
+| Sistemas |      500 |        9 | Sistemas y Computacion |
+| Sistemas |      500 |        9 | Sistemas y Computacion |
+| Sistemas |      500 |        9 | Sistemas y Computacion |
++----------+----------+----------+------------------------+
+3 rows in set (0.0021 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc pais;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| nombre     | varchar(50)                                        | NO   | UNI | NULL    |                |
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('Europa','Asia','Africa','America','Oceania') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.0030 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table pais drop clave;
+Query OK, 1 row affected (1.5381 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter tables pais add primary key (nombre, continente);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tables pais add primary key (nombre, continente)' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table pais add primary key (nombre, continente);
+Query OK, 0 rows affected (1.2856 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc personal2;
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| Field        | Type                                                     | Null | Key | Default | Extra          |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+| calve        | int(11)                                                  | NO   | PRI | NULL    | auto_increment |
+| nombre       | varchar(50)                                              | NO   |     | NULL    |                |
+| apellido     | varchar(50)                                              | NO   |     | NULL    |                |
+| departamento | enum('Sistemas','Contabilidad','Inhumanos','Produccion') | YES  |     | NULL    |                |
+| salario      | float                                                    | YES  |     | 15000   |                |
+| RFC          | varchar(50)                                              | NO   | UNI | NULL    |                |
++--------------+----------------------------------------------------------+------+-----+---------+----------------+
+6 rows in set (0.0037 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 drop clave;
+ERROR: 1091 (42000): Can't DROP 'clave'; check that column/key exists
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 calve clave int;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'calve clave int' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 change calve to clave int;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to clave int' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 drop calve;
+Query OK, 1 row affected (1.4336 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 add column(clave);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 add column(clave;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table personal2 add column clave int;
+Query OK, 0 rows affected (0.4380 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL >

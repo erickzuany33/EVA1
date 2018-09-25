@@ -1,0 +1,252 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 15
+Server version: 8.0.12 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_1
+Default schema set to `eva_1`.
+Fetching table and column names from `eva_1` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table factura
+                                     ... (;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table factura(
+                                     ... no_fact int AUTO_INCREMENT primary key,
+                                     ... nombre varchar(50),
+                                     ... apellido varchar(50),
+                                     ... RFC varchar(13),
+                                     ... direccion varchar(100),
+                                     ... no_tel varchar(50),
+                                     ... cel varchar(50));
+Query OK, 0 rows affected (0.5300 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc clientesM
+                                     ... ;
+ERROR: 1146 (42S02): Table 'eva_1.clientesm' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc clientes;
+ERROR: 1146 (42S02): Table 'eva_1.clientes' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc cliente;
+ERROR: 1146 (42S02): Table 'eva_1.cliente' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table factura drop;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table drop factura;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'drop factura' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > drop table factura;
+Query OK, 0 rows affected (0.4067 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table cliente( no_fact int AUTO_INCREMENT primary key, nombre varchar(50), apellido varchar(50), RFC varchar(13), direccion varchar(100), no_tel varchar(50), cel varchar(50));
+Query OK, 0 rows affected (0.4125 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc clinte;
+ERROR: 1146 (42S02): Table 'eva_1.clinte' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc cliente;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| no_fact   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nombre    | varchar(50)  | YES  |     | NULL    |                |
+| apellido  | varchar(50)  | YES  |     | NULL    |                |
+| RFC       | varchar(13)  | YES  |     | NULL    |                |
+| direccion | varchar(100) | YES  |     | NULL    |                |
+| no_tel    | varchar(50)  | YES  |     | NULL    |                |
+| cel       | varchar(50)  | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+7 rows in set (0.0047 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table producto(
+                                     ... no_producto int auto_increment primary key;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table producto( no_producto int auto_increment primary key,
+                                     ... nombre varchar(50),
+                                     ... precio float));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table producto( no_producto int auto_increment primary key, nombre varchar(50), precio float);
+Query OK, 0 rows affected (0.5193 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > create table factura(
+                                     ... no_fact int auto_increment primary key,
+                                     ... fecha_compra datetime,
+                                     ... no_cliente int REFERENCES cliente(no_cliente)
+                                     ... on delete restrict on update cascade);
+Query OK, 0 rows affected (0.5009 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into cliente (nombre,apellido)
+                                     ... values ('Erick','Zuany');
+Query OK, 1 row affected (0.1297 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from cliente;
++---------+--------+----------+------+-----------+--------+------+
+| no_fact | nombre | apellido | RFC  | direccion | no_tel | cel  |
++---------+--------+----------+------+-----------+--------+------+
+|       1 | Erick  | Zuany    | NULL | NULL      | NULL   | NULL |
++---------+--------+----------+------+-----------+--------+------+
+1 row in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into factura (fecha_compra, no_cliente)
+                                     ... values ('2018-09-12',2);
+Query OK, 1 row affected (0.1505 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into factura (fecha_compra, no_cliente) values ('2018-09-12',1);
+Query OK, 1 row affected (0.1396 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from factura;
++---------+---------------------+------------+
+| no_fact | fecha_compra        | no_cliente |
++---------+---------------------+------------+
+|       1 | 2018-09-12 00:00:00 |          2 |
+|       2 | 2018-09-12 00:00:00 |          1 |
++---------+---------------------+------------+
+2 rows in set (0.0011 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc cliente;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| no_fact   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nombre    | varchar(50)  | YES  |     | NULL    |                |
+| apellido  | varchar(50)  | YES  |     | NULL    |                |
+| RFC       | varchar(13)  | YES  |     | NULL    |                |
+| direccion | varchar(100) | YES  |     | NULL    |                |
+| no_tel    | varchar(50)  | YES  |     | NULL    |                |
+| cel       | varchar(50)  | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+7 rows in set (0.0037 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > update cliente set no_cliente = 5 where no_cliente = 1;
+ERROR: 1054 (42S22): Unknown column 'no_cliente' in 'where clause'
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > update cliente set no_fact = 5 where no_fact = 1;
+Query OK, 1 row affected (0.2025 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from cliente;
++---------+--------+----------+------+-----------+--------+------+
+| no_fact | nombre | apellido | RFC  | direccion | no_tel | cel  |
++---------+--------+----------+------+-----------+--------+------+
+|       5 | Erick  | Zuany    | NULL | NULL      | NULL   | NULL |
++---------+--------+----------+------+-----------+--------+------+
+1 row in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from factura;
++---------+---------------------+------------+
+| no_fact | fecha_compra        | no_cliente |
++---------+---------------------+------------+
+|       1 | 2018-09-12 00:00:00 |          2 |
+|       2 | 2018-09-12 00:00:00 |          1 |
++---------+---------------------+------------+
+2 rows in set (0.0011 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table factura add constraint foreing key (no_fact)
+                                     ... references cliente (no_fact) on delete restrict on update cascade;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'key (no_fact)
+references cliente (no_fact) on delete restrict on update cascade' at line 1
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table factura add constraint foreign key (no_fact)  references cliente (no_fact) on delete restrict on update cascade;
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`eva_1`.`#sql-12d8_f`, CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`no_fact`) REFERENCES `cliente` (`no_fact`) ON UPDATE CASCADE)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table cliente change no_fact no_cliente int;
+Query OK, 1 row affected (1.0047 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc cliente;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| no_cliente | int(11)      | NO   | PRI | NULL    |       |
+| nombre     | varchar(50)  | YES  |     | NULL    |       |
+| apellido   | varchar(50)  | YES  |     | NULL    |       |
+| RFC        | varchar(13)  | YES  |     | NULL    |       |
+| direccion  | varchar(100) | YES  |     | NULL    |       |
+| no_tel     | varchar(50)  | YES  |     | NULL    |       |
+| cel        | varchar(50)  | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+7 rows in set (0.0511 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table factura add constraint foreign key (no_cliente)
+                                     ... references cliente (no_cliente) on delete restrict on update cascade;
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`eva_1`.`#sql-12d8_f`, CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`no_cliente`) REFERENCES `cliente` (`no_cliente`) ON UPDATE CASCADE)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > delete from factura;
+Query OK, 2 rows affected (0.1465 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > alter table factura add constraint foreign key (no_cliente) references cliente (no_cliente) on delete restrict on update cascade;
+Query OK, 0 rows affected (2.5606 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc factura;
++--------------+----------+------+-----+---------+----------------+
+| Field        | Type     | Null | Key | Default | Extra          |
++--------------+----------+------+-----+---------+----------------+
+| no_fact      | int(11)  | NO   | PRI | NULL    | auto_increment |
+| fecha_compra | datetime | YES  |     | NULL    |                |
+| no_cliente   | int(11)  | YES  | MUL | NULL    |                |
++--------------+----------+------+-----+---------+----------------+
+3 rows in set (0.0595 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > insert into factura (fecha_compra, no_cliente)
+                                     ... values ('2018-09-12', 5);
+Query OK, 1 row affected (0.2138 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > update cliente set no_cliente = 3 where no_cliente = 5;
+Query OK, 1 row affected (0.1906 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > desc factura;
++--------------+----------+------+-----+---------+----------------+
+| Field        | Type     | Null | Key | Default | Extra          |
++--------------+----------+------+-----+---------+----------------+
+| no_fact      | int(11)  | NO   | PRI | NULL    | auto_increment |
+| fecha_compra | datetime | YES  |     | NULL    |                |
+| no_cliente   | int(11)  | YES  | MUL | NULL    |                |
++--------------+----------+------+-----+---------+----------------+
+3 rows in set (0.0032 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from cliente;
++------------+--------+----------+------+-----------+--------+------+
+| no_cliente | nombre | apellido | RFC  | direccion | no_tel | cel  |
++------------+--------+----------+------+-----------+--------+------+
+|          3 | Erick  | Zuany    | NULL | NULL      | NULL   | NULL |
++------------+--------+----------+------+-----------+--------+------+
+1 row in set (0.0012 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL > select * from factura;
++---------+---------------------+------------+
+| no_fact | fecha_compra        | no_cliente |
++---------+---------------------+------------+
+|       3 | 2018-09-12 00:00:00 |          3 |
++---------+---------------------+------------+
+1 row in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  eva_1  SQL >
